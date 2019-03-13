@@ -13,7 +13,7 @@ from sklearn.ensemble import RandomForestRegressor
 import warnings
 warnings.filterwarnings("ignore")
 
-data = pd.read_csv("/users/guest/m/masonfp/Desktop/478_group_project/datasets/Dataset in tabs - All Features.csv", index_col=0)
+data = pd.read_csv("../Dataset in tabs - All Features.csv", index_col=0)
 data = data.fillna(value=-1)
 
 X = data[data.columns[1:]]
