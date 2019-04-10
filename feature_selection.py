@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from sklearn.linear_model import Ridge, LinearRegression
 from sklearn.model_selection import cross_validate
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.pipeline import Pipeline
@@ -71,7 +72,9 @@ Y = data[data.columns[1]]
 models = {'DecisionTree': DecisionTreeRegressor(), 'KNN': KNeighborsRegressor(), 'NaiveBayes': GaussianNB(),
           'MLP': MLPRegressor(batch_size=1),
           #   'SVM': SVR(),
-          'RandomForest': RandomForestRegressor(n_estimators=100)}
+          'RandomForest': RandomForestRegressor(n_estimators=100),
+          'Ridge': Ridge(),
+          'LinearRegression': LinearRegression()}
 
 scoring = ['neg_mean_squared_error', 'r2']
 
