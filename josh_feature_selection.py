@@ -42,6 +42,7 @@ class FeatureSelector:
 
         # what dataset to load
         self.dataset_file = "Dataset in tabs - All Features.csv"
+        # self.dataset_file = "imputedData.csv"
 
         # instantiate a scaler; set to None for no scaling
         # https://scikit-learn.org/stable/modules/preprocessing.html#scaling-features-to-a-range
@@ -84,6 +85,7 @@ class FeatureSelector:
         print(*DELETE_FEATURES, sep="\n")
         print("\n---\n")
 
+        # fit the selectors and regressors (i.e. estimators or models)
         results = []
         for selector_name, selector in self.selectors:
             for regressor_name, regressor in self.regressors:
@@ -95,20 +97,24 @@ class FeatureSelector:
                 else:
                     selected_features = self.select(selector)
                     regressor_score = self.train(selector, regressor)
+                # print the top selected features for this test
                 print("{} selector with {}:".format(selector_name, regressor_name))
                 print(*selected_features, sep="\n")
                 print("{} 5 cross-fold average r2: {}".format(regressor_name, regressor_score))
+                print("\n")
                 results.append((selector_name, regressor_name, selected_features, regressor_score))
             print("---\n")
 
+        # combine results from tests and print; first combine by selector
         selector_features = []
         for selector_name, selector in self.selectors:
             selector_feature_list = [r[2] for r in results if r[0] == selector_name]
             print("{} ranked results:".format(selector_name))
-            reg_results = compare_lists.get_common_items(*selector_feature_list)
             print("\n")
+            reg_results = compare_lists.get_common_items(*selector_feature_list)
             selector_features.append((selector_name, reg_results))
 
+        # combine total results
         print("---COMBINED TOTAL---\n")
         compare_lists.get_total_items(*[r[1] for r in selector_features])
 
@@ -135,8 +141,6 @@ class FeatureSelector:
         selector.fit(self.X, self.Y)
         feature_dictionary = {key: value for (key, value) in zip(selector.scores_, self.X.columns)}
         return list(reversed(sorted(feature_dictionary.items())))[:10]
-        # print(*selected_features, sep="\n")
-        # print("\n")
 
     def select_rfe(self, selector: RFE):
         selector = selector.fit(self.X, self.Y)
@@ -149,7 +153,6 @@ class FeatureSelector:
     def train(self, selector, regressor):
         x_train = selector.transform(self.X) if selector else self.X
         return np.average(cross_val_score(regressor, x_train, self.Y, cv=5, scoring="r2"))
-        # print("Random Forest Regression: 5 cross-fold average r2:", score)
 
 
 if __name__ == '__main__':
