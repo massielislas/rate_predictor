@@ -25,6 +25,6 @@ def get_total_items(*lists):
         else:
             selected[feature] = score
 
-    ranked_features = reversed(sorted(selected.items(), key=lambda kv: kv[1]))
+    ranked_features = list(reversed(sorted(selected.items(), key=lambda kv: kv[1])))
     print(*ranked_features, sep="\n")
     return ranked_features

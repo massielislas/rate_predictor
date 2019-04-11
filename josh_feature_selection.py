@@ -15,15 +15,12 @@ np.set_printoptions(precision=4, suppress=True, floatmode='maxprec')
 # manually selected features to remove, based on tests
 DELETE_FEATURES = ['Life Expectancy',
                    'Life expectancy at birth (years)',
-                   # '2016 Crude Birth Rate',
                    'Use of basic sanitation services % (rural) 2015',
-                   # 'urban use of basic sanitation services (%)',
                    'Use of basic sanitation services % (urban) 2015',
                    'Use of basic drinking water services % (rural) 2015.1',
                    'Use of basic drinking water services % (rural) 2015',
                    'Use of basic drinking water services % (urban) 2015',
                    'Reported Maternal mortality ratio',
-                   # 'adolescent proportion of total population (%)'
                    ]
 
 REGION = "Region"
@@ -41,23 +38,17 @@ class FeatureSelector:
         self.delete_features = True
 
         # what dataset to load
-        self.dataset_file = "Dataset in tabs - All Features.csv"
-        # self.dataset_file = "imputedData.csv"
+        # self.dataset_file = "Dataset in tabs - All Features.csv"
+        self.dataset_file = "imputedData.csv"
 
         # instantiate a scaler; set to None for no scaling
         # https://scikit-learn.org/stable/modules/preprocessing.html#scaling-features-to-a-range
-        # I used a MinMaxScaler; alternatives are RobustScaler and Normalizer
         self.scaler = MinMaxScaler()
 
         # instantiate an imputer; set to None for no imputing (but this messes up scikit-learn)
-        # scikit-learn documentation recommends imputing missing values (see link)
         # https://scikit-learn.org/stable/modules/impute.html#impute
-        # I used a SimpleImputer with a "median" imputation strategy:
-        # https://scikit-learn.org/stable/modules/generated/sklearn.impute.SimpleImputer.html#sklearn.impute.SimpleImputer
-        # Alternatives are using a "mean", "most_frequent" imputation strategy, or "constant" strategy by supplying a
-        #   fill value such as -1
-        self.imputer = SimpleImputer(strategy="median")
-        # self.imputer = SimpleImputer(strategy="constant", fill_value=-1)
+        # self.imputer = SimpleImputer(strategy="median")
+        self.imputer = SimpleImputer(strategy="constant", fill_value=-1)
 
         # whether to ignore the "Region" column (only the imputedData.csv file has it)
         self.ignore_region = True
@@ -101,7 +92,7 @@ class FeatureSelector:
                 print("{} selector with {}:".format(selector_name, regressor_name))
                 print(*selected_features, sep="\n")
                 print("{} 5 cross-fold average r2: {}".format(regressor_name, regressor_score))
-                print("\n")
+                print("")
                 results.append((selector_name, regressor_name, selected_features, regressor_score))
             print("---\n")
 
@@ -109,14 +100,14 @@ class FeatureSelector:
         selector_features = []
         for selector_name, selector in self.selectors:
             selector_feature_list = [r[2] for r in results if r[0] == selector_name]
-            print("{} ranked results:".format(selector_name))
-            print("\n")
+            print("{} ranked results:\n".format(selector_name))
             reg_results = compare_lists.get_common_items(*selector_feature_list)
+            print("")
             selector_features.append((selector_name, reg_results))
 
         # combine total results
         print("---COMBINED TOTAL---\n")
-        compare_lists.get_total_items(*[r[1] for r in selector_features])
+        return compare_lists.get_total_items(*[r[1] for r in selector_features])
 
     def load_dataset(self):
         print("loading dataset:", self.dataset_file, "\n")

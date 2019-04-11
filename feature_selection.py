@@ -15,14 +15,14 @@ from sklearn.feature_selection import RFE, RFECV
 import time
 
 delete_features = ['Life Expectancy', 'Life expectancy at birth (years)',
-                   '2016 Crude Birth Rate', 'Use of basic sanitation services % (rural) 2015',
-                   'urban use of basic sanitation services (%)',
+                   'Use of basic sanitation services % (rural) 2015',
+                   # 'urban use of basic sanitation services (%)',
                    'Use of basic sanitation services % (urban) 2015',
                    'Use of basic drinking water services % (rural) 2015.1',
                    'Use of basic drinking water services % (rural) 2015',
                    'Use of basic drinking water services % (urban) 2015',
                    'Reported Maternal mortality ratio',
-                   'adolescent proportion of total population (%)',
+                   # 'adolescent proportion of total population (%)',
                    # 'Total Fertility Rate',
                    ]
 

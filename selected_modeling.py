@@ -4,7 +4,6 @@ import numpy as np
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import Ridge, LinearRegression
 from sklearn.model_selection import cross_validate
-from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.neural_network import MLPRegressor
 from sklearn.preprocessing import MinMaxScaler
@@ -12,17 +11,21 @@ from sklearn.tree import DecisionTreeRegressor
 
 SELECTED_FEATURES = ['2015 Adjusted Maternal mortality ratio',
                      '2016 Crude Birth Rate',
-                     'urban use of basic sanitation services (%)',
-                     'Use of basic drinking water services % (total) 2015',
                      'Number per 200 population 2016 internet users',
-                     'adolescent birth rate',
-                     '2015 Maternal mortality ratio: Lifetime risk of maternal death (1 in:)',
-                     'Ratio of Male:Female 2016 Under-5 Mortality Rates',
+                     'Use of basic drinking water services % (total) 2015',
                      'Total Fertility Rate',
-                     'Total adult literacy rate (%)',
-                     'adolescent proportion of total population (%)',
+                     '2015 Maternal mortality ratio: Lifetime risk of maternal death (1 in:)',
+                     'adolescent birth rate',
+                     'urban use of basic sanitation services (%)',
+                     'lower secondary school gross enrollment ratio',
                      'rural use of basic sanitation services (%)',
-                     'Delivery care (%): Skilled birth attendant']
+                     'Projected (2016-2030) Average annual growth rate of urban population (%)',
+                     'rural stunting prevalence in children under 5 (moderate & severe) (%)',
+                     'adolescent proportion of total population (%)',
+                     'Lower secondary school participation Net attendance ratio 2011-2016 (female)',
+                     'urban stunting prevalence in children under 5 (moderate & severe) (%)',
+                     '2016 Crude Death Rate']
+
 
 delete_features = ['Life Expectancy',
                    'Life expectancy at birth (years)',
@@ -42,12 +45,15 @@ models = {'DecisionTree': DecisionTreeRegressor(),
           'Ridge': Ridge(),
           'LinearRegression': LinearRegression()}
 
-
 data = pd.read_csv("imputedData.csv", index_col=0)
-data.drop(columns=delete_features, axis=1, inplace=True)
 
-X = data[data.columns[2:]]
-# X = data[SELECTED_FEATURES]
+# baseline:
+# data.drop(columns=delete_features, axis=1, inplace=True)
+# X = data[data.columns[2:]]
+
+# selected features:
+X = data[SELECTED_FEATURES]
+
 Y = data[data.columns[1]]
 
 scaler = MinMaxScaler()
